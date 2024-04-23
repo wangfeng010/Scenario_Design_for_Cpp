@@ -8,3 +8,9 @@ file(GLOB_RECURSE SOURCE_FILES "${CMAKE_SOURCE_DIR}/src/*.cpp")
 
 # 创建一个可执行文件
 add_executable(scenario_design_for_cpp ${SOURCE_FILES})
+
+# 包含第三方库
+target_link_libraries(scenario_design_for_cpp
+PUBLIC
+easyx
+)

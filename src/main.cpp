@@ -2,7 +2,8 @@
 
 int main()
 {
-    cout << "helloworld" << endl;
+    cout << "Hello World" << endl;
+
     system("pause");
     return 0;
 }
