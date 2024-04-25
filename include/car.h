@@ -32,6 +32,8 @@ public:
 
 	void moveStraightStep();//单帧直行	
 	void carTurnStep();//单帧转向
+	void updateXYva();//更新x和y方向的速度和加速度
+	void updateStraightInfo();//更新直行信息
 
 public:
 	double car_width = 80.0;//车宽
@@ -69,4 +71,11 @@ public:
 	double heading_theta = 0.0;//航向角，为0时车辆竖直向上，负代表向左偏航，正代表向右偏航
 
 	int Gear = m_P;//档位
+};
+
+/******************************************一般车******************************************/
+class CarNormal : public CarBase
+{
+public:
+	CarNormal(const double& pos_x, const double& pos_y, const double& heading = 0.0, const double& width = 80.0, const double& length = 160.0);
 };

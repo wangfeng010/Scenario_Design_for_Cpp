@@ -122,3 +122,56 @@ void CarBase::carTurnStep()//单帧转向
 	prr->pointTurn(*p_center, delta_theta);
 	heading_theta += delta_theta;
 }
+
+void CarBase::updateXYva()//更新x和y方向的速度和加速度
+{
+	speed_x = speed * sin(heading_theta);
+	speed_y = speed * cos(heading_theta);
+	a_x = a * sin(heading_theta);
+	a_y = a * cos(heading_theta);
+	cout << "speed_x = " << speed_x << ", speed_y = " << speed_y << ", a_x = " << a_x << ", a_y = " << a_y << endl;
+}
+
+void CarBase::updateStraightInfo()//更新直行信息
+{
+	updatePmidr();
+	updatePmidf();
+	updatePmid();
+	updateXYva();  //更新X，Y方向的速度和加速度
+	p_center.reset();//指针指向空
+
+	Ror = 0.0;
+	Rir = 0.0;
+	Rof = 0.0;
+	Rif = 0.0;
+
+	pmidr->thetaP = 0.0;
+	pmidr->Rp = 0.0;
+
+	pmidf->thetaP = 0.0;
+	pmidf->Rp = 0.0;
+
+	pmid->thetaP = 0.0;
+	pmid->Rp = 0.0;
+
+	plr->thetaP = 0.0;
+	plr->Rp = 0.0;
+
+	prr->thetaP = 0.0;
+	prr->Rp = 0.0;
+
+	plf->thetaP = 0.0;
+	plf->Rp = 0.0;
+
+	prf->thetaP = 0.0;
+	prf->Rp = 0.0;
+
+	delta_theta = 0.0;
+	delta_theta_rot = 0.0;
+}
+
+/******************************************一般车******************************************/
+CarNormal::CarNormal(const double& pos_x, const double& pos_y, const double& heading, const double& width, const double& length) //一般车
+{
+	initCar(pos_x, pos_y, heading, width, length);
+}
