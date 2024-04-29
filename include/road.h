@@ -28,3 +28,19 @@ public:
 	RoadNormal(const double& r_width = 200.0);
 	void showRoad() override;//绘制道路
 };
+
+class RoadCrosswalk : public RoadBase//斑马线道路
+{
+public:
+	RoadCrosswalk(const double& r_width = 200.0);
+	void showRoad() override;//绘制道路
+	double getUpLine() { return this->up_line; }//获取斑马线上边界
+	double getMidLine() { return this->mid_line; }//获取斑马线中心线
+	double getDownLine() { return this->down_line; }//获取斑马线下边界
+
+public:
+	double up_line = 0.0;//斑马线上边界
+	double mid_line = 0.0;//斑马线中心线
+	double down_line = 0.0;//斑马线下边界
+	double disRec = 20.0;//间距
+};

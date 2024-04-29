@@ -128,3 +128,123 @@ bool StraightFollow::planning_process()//整个过程
 	car0->coutInfo();
 	return true;
 }
+
+/******************************************通过斑马线******************************************/
+StraightCrosswalk::StraightCrosswalk()//通过斑马线
+{
+	road0 = make_unique<RoadCrosswalk>();
+	car0 = make_unique<CarNormal>(SWIDTH / 2.0, SHEIGHT - 70.0);
+	car0->speed_y = -4.0;
+
+	for (int i = 0; i < people_num; i++)
+	{
+		unique_ptr<Person> ps = make_unique<Person>(road0->right_boundary + 20 * (i * 3 + 1), road0->getMidLine());
+		ps->speed = -2;
+		people.emplace_back(move(ps));
+	}
+
+	car0->coutInfo();
+	showScene();//显示
+	system("pause");
+}
+
+bool StraightCrosswalk::peopleInCross()//斑马线是否有人
+{
+	for (auto& i : people)
+	{
+		if (i->p_center->x >= road0->left_boundary - i->r && i->p_center->x <= road0->right_boundary + i->r)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+void StraightCrosswalk::showScene()//显示
+{
+	BeginBatchDraw();
+	cleardevice();
+
+	road0->showRoad();
+	car0->showCar(BLACK);
+
+	car0->moveStraightStep();
+	car0->speed_y += car0->a_y;
+
+	for (auto& i : people)
+	{
+		i->showPerson();
+		i->personMove();
+	}
+
+	EndBatchDraw();
+	delay(DELAYTIME);
+}
+
+bool StraightCrosswalk::planning_process()
+{
+	//进入斑马线场景，一律先减速
+	double dis = car0->pmidf->y - road0->getDownLine();
+	car0->a_y = pow(car0->speed_y, 2) / 2.0 / dis;
+
+	while (dis > 0.0)
+	{
+		dis = car0->pmidf->y - road0->getDownLine();
+		if (!peopleInCross())//如果斑马线没人
+		{
+			if (car0->speed_y >= speedlimit_cross)//斑马线限速
+			{
+				car0->a_y = 0.0;//变为匀速运动
+			}
+		}
+		else
+		{
+			if (dis <= 7.0)//停止线前让车辆完全停下，防止慢速挪动或倒车
+			{
+				car0->speed_y = 0.0;
+				car0->a_y = 0.0;
+				break;
+			}
+		}
+
+		cout << "dis = " << dis << ", car speed_y = " << car0->speed_y << ", a_y = " << car0->a_y << endl;
+		showScene();//显示
+	}
+
+	//限速通过斑马线
+	while (car0->pmidr->y > road0->getUpLine())//斑马线区间
+	{
+		if (!peopleInCross())//如果斑马线没人了
+		{
+			if (car0->speed_y > speedlimit_cross)//没达到斑马线限速
+			{
+				car0->a_y = -0.05;//加速
+			}
+			else //达到斑马线限速
+			{
+				car0->a_y = 0.0;//变为匀速运动
+			}
+		}
+
+		cout << "car speed_y = " << car0->speed_y << ", a_y = " << car0->a_y << endl;
+		showScene();//显示
+	}
+
+	//过了斑马线，继续加速，直到达到道路限速
+	while (car0->pmidr->y > 0.0)
+	{
+		if (car0->speed_y > speedlimit)//没达到道路限速
+		{
+			car0->a_y = -0.05;//加速
+		}
+		else
+		{
+			car0->a_y = 0.0;//变为匀速运动
+		}
+
+		cout << "car speed_y = " << car0->speed_y << ", a_y = " << car0->a_y << endl;
+		showScene();//显示
+	}
+
+	return true;
+}

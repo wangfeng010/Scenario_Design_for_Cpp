@@ -19,6 +19,11 @@ bool process(const int& type)//总过程
 		unique_ptr<SceneBase> plan_obj = make_unique<StraightFollow>();
 		return plan_obj->planning_process();
 	}
+	case PlanType::StraightCrosswalkType:
+	{
+		unique_ptr<SceneBase> plan_obj = make_unique<StraightCrosswalk>();
+		return plan_obj->planning_process();
+	}
 	default:
 		break;
 	}
@@ -32,7 +37,7 @@ int main()
 	setbkcolor(WHITE);//设置背景颜色
 	cleardevice();
 
-	if (process(PlanType::StraightFollowType))
+	if (process(PlanType::StraightCrosswalkType))
 	{
 		cout << "完成" << endl;
 	}
