@@ -24,6 +24,21 @@ bool process(const int& type)//总过程
 		unique_ptr<SceneBase> plan_obj = make_unique<StraightCrosswalk>();
 		return plan_obj->planning_process();
 	}
+	case PlanType::ObsPassStaticType:
+	{
+		unique_ptr<SceneBase> plan_obj = make_unique<StaticObs>();
+		return plan_obj->planning_process();
+	}
+	case PlanType::ObsPassOvertakeType:
+	{
+		unique_ptr<SceneBase> plan_obj = make_unique<OvertakeObs>();
+		return plan_obj->planning_process();
+	}
+	case PlanType::ObsPassMeetingType:
+	{
+		unique_ptr<SceneBase> plan_obj = make_unique<MeetingObs>();
+		return plan_obj->planning_process();
+	}
 	default:
 		break;
 	}
@@ -37,7 +52,7 @@ int main()
 	setbkcolor(WHITE);//设置背景颜色
 	cleardevice();
 
-	if (process(PlanType::StraightCrosswalkType))
+	if (process(PlanType::ObsPassMeetingType))
 	{
 		cout << "完成" << endl;
 	}

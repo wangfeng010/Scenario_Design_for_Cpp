@@ -123,6 +123,79 @@ void CarBase::carTurnStep()//单帧转向
 	heading_theta += delta_theta;
 }
 
+void CarBase::updateRinRout(const double& R)//更新4个半径
+{
+	Ror = R + car_width / 2.0;
+	Rir = R - car_width / 2.0;
+	Rof = hypot(Ror, car_length); //sqrt(pow(Ror, 2.0) + pow(car_length, 2.0));
+	Rif = hypot(Rir, car_length); //sqrt(pow(Rir, 2.0) + pow(car_length, 2.0));
+}
+
+void CarBase::updateTurnInfo(const int& turn_state, const double& R)//更新转向信息
+{
+	double x = 0.0;
+	double y = 0.0;
+	updateRinRout(R);//更新4个半径
+	cout << "Rof = " << Rof << ", Rif = " << Rif << ", Ror = " << Ror << ", Rir = " << Rir << endl;
+
+	if (turn_state == TurnDirection::TurnRight)//右转
+	{
+		//计算转向中心坐标
+		x = pmidr->x + R * cos(heading_theta);
+		y = pmidr->y - R * sin(heading_theta);
+
+		//更新5个点角度和半径
+		pmidr->thetaP = heading_theta + PI;
+		pmidr->Rp = R;
+
+		plr->thetaP = pmidr->thetaP;
+		plr->Rp = Ror;
+
+		prr->thetaP = pmidr->thetaP;
+		prr->Rp = Rir;
+
+		plf->thetaP = pmidr->thetaP - atan(car_length / Ror);
+		plf->Rp = Rof;
+
+		prf->thetaP = pmidr->thetaP - atan(car_length / Rir);
+		prf->Rp = Rif;
+	}
+	else//左转
+	{
+		//计算转向中心坐标
+		x = pmidr->x - R * cos(heading_theta);
+		y = pmidr->y + R * sin(heading_theta);
+
+		//更新5个点角度和半径
+		pmidr->thetaP = heading_theta;
+		pmidr->Rp = R;
+
+		plr->thetaP = pmidr->thetaP;
+		plr->Rp = Rir;
+
+		prr->thetaP = pmidr->thetaP;
+		prr->Rp = Ror;
+
+		plf->thetaP = pmidr->thetaP + atan(car_length / Rir);
+		plf->Rp = Rif;
+
+		prf->thetaP = pmidr->thetaP + atan(car_length / Ror);
+		prf->Rp = Rof;
+	}
+	cout << "center_turn.x= " << x << ", center_turn.y= " << y << endl;
+
+	//更新转向中心
+	if (p_center)
+	{
+		p_center->x = x;
+		p_center->y = y;
+	}
+	else
+	{
+		p_center = make_unique<Point>(x, y);
+	}
+}
+
 void CarBase::updateXYva()//更新x和y方向的速度和加速度
 {
 	speed_x = speed * sin(heading_theta);

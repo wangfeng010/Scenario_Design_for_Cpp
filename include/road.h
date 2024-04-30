@@ -29,6 +29,13 @@ public:
 	void showRoad() override;//绘制道路
 };
 
+class RoadDoubleLane : public RoadBase//双车道线道路
+{
+public:
+	RoadDoubleLane(const double& r_width = 200.0);
+	void showRoad() override;//绘制道路
+};
+
 class RoadCrosswalk : public RoadBase//斑马线道路
 {
 public:

@@ -35,5 +35,25 @@ public:
 	int r = 5;//绘制半径
 };
 
+/******************************************向量******************************************/
+class Vec2d
+{
+public:
+	Vec2d() = default;
+	Vec2d(const double& new_x, const double& new_y, const bool& flag);//通过两个值构造向量，flag用于区分另一个构造函数
+	Vec2d(const Point& p_start, const Point& p_end);//通过两个点构造向量
+	Vec2d(const double& length, const double& angle);//通过长度和方向构造向量
+	double length();//模
+	double crossProd(const Vec2d& other) const;//叉乘
+	double innerProd(const Vec2d& other) const;//点乘
+
+public:
+	double x;
+	double y;
+};
+
 /******************************************全局函数******************************************/
 void delay(const int& time); //延时函数，单位ms
+double normalizeAngle(const double& theta); //角度修正到[-PI, PI)之间
+void correctAngleError(double& target_theta, const double& delta_theta);//角度误差修正
+double disPointToLine(const Point& p, const Point& p_start, const Point& p_end);//点到直线的距离

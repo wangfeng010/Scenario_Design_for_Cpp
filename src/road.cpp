@@ -15,6 +15,24 @@ void RoadNormal::showRoad()//绘制道路
 	line(right_boundary, 0.0, right_boundary, SHEIGHT);
 }
 
+RoadDoubleLane::RoadDoubleLane(const double& r_width)
+{
+	Rwidth = r_width;
+	left_boundary = SWIDTH / 2.0 - Rwidth;
+	right_boundary = SWIDTH / 2.0 + Rwidth;
+}
+
+void RoadDoubleLane::showRoad()
+{
+	setlinestyle(PS_SOLID, 4);
+	setlinecolor(BLACK);
+	line(left_boundary, 0.0, left_boundary, SHEIGHT);
+	line(right_boundary, 0.0, right_boundary, SHEIGHT);
+
+	setlinestyle(PS_DASH, 4);
+	line(SWIDTH / 2.0, 0.0, SWIDTH / 2.0, SHEIGHT);
+}
+
 RoadCrosswalk::RoadCrosswalk(const double& r_width)//斑马线道路
 {
 	Rwidth = r_width;

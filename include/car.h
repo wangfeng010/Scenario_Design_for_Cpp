@@ -32,8 +32,11 @@ public:
 
 	void moveStraightStep();//单帧直行	
 	void carTurnStep();//单帧转向
+
 	void updateXYva();//更新x和y方向的速度和加速度
 	void updateStraightInfo();//更新直行信息
+	void updateRinRout(const double& R);//更新4个半径
+	void updateTurnInfo(const int& turn_state, const double& R);//更新转向信息
 
 public:
 	double car_width = 80.0;//车宽
